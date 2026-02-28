@@ -9,6 +9,7 @@ def main():
         value="Sample",
         props={"href": "https://www.google.com", "target": "_blank"}
     )
-    print(repr(node))
+    # print(repr(node))
+    print(node)
 
 main()
