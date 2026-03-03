@@ -95,15 +95,3 @@ def split_nodes_link(old_nodes):
         if original_text != "":
             new_nodes.append(TextNode(original_text, TextType.TEXT))
     return new_nodes
-
-
-
-
-some_text = "This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
-
-print(text_to_textnodes(some_text))
-
-nodes = text_to_textnodes(some_text)
-
-for node in nodes:
-    print(node)
