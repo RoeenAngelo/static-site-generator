@@ -1,6 +1,15 @@
 from textnode import TextNode, TextType
 import re
 
+def text_to_textnodes(text):
+    textnodes = [TextNode(text, TextType.TEXT)]
+    textnodes = split_nodes_delimiter(textnodes, "_", TextType.ITALIC)
+    textnodes = split_nodes_delimiter(textnodes, "**", TextType.BOLD)
+    textnodes = split_nodes_delimiter(textnodes, "`", TextType.CODE)
+    textnodes = split_nodes_image(textnodes)
+    textnodes = split_nodes_link(textnodes)
+    return textnodes
+
 def split_nodes_delimiter(old_nodes, delimiter, text_type):
     new_nodes = []
 
@@ -75,13 +84,8 @@ def split_nodes_link(old_nodes):
         original_text = old_node.text
         links = extract_markdown_links(original_text)
 
-        print("OG_Text:", original_text)
-        print("links:", links)
-
-
         for link in links:
             parts = original_text.split(f"[{link[0]}]({link[1]})", 1)
-            print("parts:", parts)
             if len(parts) != 2:
                 raise ValueError('invalid markdown, link section not closed')
             if parts[0] != "":
@@ -91,3 +95,15 @@ def split_nodes_link(old_nodes):
         if original_text != "":
             new_nodes.append(TextNode(original_text, TextType.TEXT))
     return new_nodes
+
+
+
+
+some_text = "This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
+
+print(text_to_textnodes(some_text))
+
+nodes = text_to_textnodes(some_text)
+
+for node in nodes:
+    print(node)
