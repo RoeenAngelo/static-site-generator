@@ -33,24 +33,10 @@ def block_type_to_html_node(block):
         return ParentNode("p", text_to_children(text))
     
     if block_type == BlockType.HEADING:
-        if block.startswith("# "):
-            text = block[2:]
-            return ParentNode("h1", text_to_children(text))
-        if block.startswith("## "):
-            text = block[3:]
-            return ParentNode("h2", text_to_children(text))
-        if block.startswith("### "):
-            text = block[4:]
-            return ParentNode("h3", text_to_children(text))
-        if block.startswith("#### "):
-            text = block[5:]
-            return ParentNode("h4", text_to_children(text))
-        if block.startswith("##### "):
-            text = block[6:]
-            return ParentNode("h5", text_to_children(text))
-        if block.startswith("###### "):
-            text = block[7:]
-            return ParentNode("h6", text_to_children(text))
+        level = len(block) - len(block.lstrip("#"))
+        text = block[level + 1:]  # skip "# "
+        return ParentNode(f"h{level}", text_to_children(text))
+
         
     if block_type == BlockType.CODE:
         text = block[4:-3]
