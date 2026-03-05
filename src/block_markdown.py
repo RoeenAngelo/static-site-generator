@@ -11,85 +11,6 @@ class BlockType(Enum):
     ULIST = "unordered_list"
     OLIST = "ordered_list"
     
-def markdown_to_html_node(markdown):
-    blocks = markdown_to_blocks(markdown)
-    children = []
-    for block in blocks:
-        children.append(block_type_to_html_node(block))
-    return ParentNode("div", children)
-
-
-def text_to_children(text):
-    text_nodes = text_to_textnodes(text)
-    children = []
-    for text_node in text_nodes:
-        children.append(text_node_to_html_node(text_node))
-    return children
-
-def block_type_to_html_node(block):
-    block_type = block_to_block_type(block)
-    
-    if block_type == BlockType.PARAGRAPH:
-        return paragraph_to_html_node(block)
-        
-    elif block_type == BlockType.HEADING:
-        return heading_to_html_node(block)
-
-    elif block_type == BlockType.CODE:
-        return code_to_html_node(block)
-    
-    elif block_type == BlockType.QUOTE:
-        return quote_to_html_node(block)
-    
-    elif block_type == BlockType.ULIST:
-        return ulist_to_html_node(block)
-
-    elif block_type == BlockType.OLIST:
-        return olist_to_html_node(block)
-    raise ValueError(f"unknown block type: {block_type}")
-
-
-def paragraph_to_html_node(block):
-    text = " ".join(block.split("\n"))
-    return ParentNode("p", text_to_children(text))
-
-def heading_to_html_node(block):
-    level = len(block) - len(block.lstrip("#"))
-    text = block[level + 1:]  # skip "# "
-    return ParentNode(f"h{level}", text_to_children(text))
-
-def code_to_html_node(block):
-    # strip opening ```\n and closing ```
-    text = block[4:-3]
-    raw_node = TextNode(text, TextType.TEXT)
-    child = text_node_to_html_node(raw_node)
-    code = ParentNode("code", [child])
-    return ParentNode("pre", [code])
-
-def quote_to_html_node(block):
-    lines = block.split("\n")
-    new_lines = []
-    for line in lines:
-        new_lines.append(line.lstrip(">").strip())
-    text = " ".join(new_lines)
-    return ParentNode("blockquote", text_to_children(text))
-
-def ulist_to_html_node(block):
-    items = block.split("\n")
-    html_items = []
-    for item in items:
-        text = item[2:]
-        html_items.append(ParentNode("li", text_to_children(text)))
-    return ParentNode("ul", html_items)
-
-def olist_to_html_node(block):
-    items = block.split("\n")
-    html_items = []
-    for item in items:
-        text = item.split(". ", 1)[1]
-        html_items.append(ParentNode("li", text_to_children(text)))
-    return ParentNode("ol", html_items)
-
 def block_to_block_type(block):
     lines = block.split("\n")
 
@@ -129,4 +50,90 @@ def markdown_to_blocks(markdown):
         if stripped_block != "":
             filtered_blocks.append(stripped_block)
     return filtered_blocks
+
+
+def markdown_to_html_node(markdown):
+    blocks = markdown_to_blocks(markdown)
+    children = []
+    for block in blocks:
+        children.append(block_type_to_html_node(block))
+    return ParentNode("div", children)
+
+
+def text_to_children(text):
+    text_nodes = text_to_textnodes(text)
+    children = []
+    for text_node in text_nodes:
+        children.append(text_node_to_html_node(text_node))
+    return children
+
+
+def block_type_to_html_node(block):
+    block_type = block_to_block_type(block)
+    
+    if block_type == BlockType.PARAGRAPH:
+        return paragraph_to_html_node(block)
+        
+    elif block_type == BlockType.HEADING:
+        return heading_to_html_node(block)
+
+    elif block_type == BlockType.CODE:
+        return code_to_html_node(block)
+    
+    elif block_type == BlockType.QUOTE:
+        return quote_to_html_node(block)
+    
+    elif block_type == BlockType.ULIST:
+        return ulist_to_html_node(block)
+
+    elif block_type == BlockType.OLIST:
+        return olist_to_html_node(block)
+    raise ValueError(f"unknown block type: {block_type}")
+
+
+def paragraph_to_html_node(block):
+    text = " ".join(block.split("\n"))
+    return ParentNode("p", text_to_children(text))
+
+
+def heading_to_html_node(block):
+    level = len(block) - len(block.lstrip("#"))
+    text = block[level + 1:]  # skip "# "
+    return ParentNode(f"h{level}", text_to_children(text))
+
+
+def code_to_html_node(block):
+    # strip opening ```\n and closing ```
+    text = block[4:-3]
+    raw_node = TextNode(text, TextType.TEXT)
+    child = text_node_to_html_node(raw_node)
+    code = ParentNode("code", [child])
+    return ParentNode("pre", [code])
+
+def quote_to_html_node(block):
+    lines = block.split("\n")
+    new_lines = []
+    for line in lines:
+        new_lines.append(line.lstrip(">").strip())
+    text = " ".join(new_lines)
+    return ParentNode("blockquote", text_to_children(text))
+
+
+def ulist_to_html_node(block):
+    items = block.split("\n")
+    html_items = []
+    for item in items:
+        text = item[2:]
+        html_items.append(ParentNode("li", text_to_children(text)))
+    return ParentNode("ul", html_items)
+
+
+def olist_to_html_node(block):
+    items = block.split("\n")
+    html_items = []
+    for item in items:
+        text = item.split(". ", 1)[1]
+        html_items.append(ParentNode("li", text_to_children(text)))
+    return ParentNode("ol", html_items)
+
 
