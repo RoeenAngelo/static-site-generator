@@ -23,6 +23,5 @@ def main():
         os.path.join(dir_path_public, "index.html"),
     )
 
-        
 
 main()
