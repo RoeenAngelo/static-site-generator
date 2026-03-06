@@ -1,6 +1,6 @@
 import os
 import shutil
-from copy_static import copy_files_recursively
+from copy_static import copy_files_recursive
 from gencontent import generate_page
 
 dir_path_static = "./static"
@@ -14,7 +14,7 @@ def main():
         shutil.rmtree(dir_path_public)
         print(f"Deleting existing destination directory: '{dir_path_public}'")
 
-    copy_files_recursively(dir_path_static, dir_path_public)
+    copy_files_recursive(dir_path_static, dir_path_public)
     print(f"Successfully copied all contents to '{dir_path_public}'.")
     print("Generating page...")
     generate_page(

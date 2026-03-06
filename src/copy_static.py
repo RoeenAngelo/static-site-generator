@@ -1,7 +1,7 @@
 import shutil
 import os
 
-def copy_files_recursively(src_dir, dest_dir):
+def copy_files_recursive(src_dir, dest_dir):
     if not os.path.exists(dest_dir):
         os.mkdir(dest_dir)
     
@@ -13,7 +13,7 @@ def copy_files_recursively(src_dir, dest_dir):
         if os.path.isfile(from_path):
             shutil.copy(from_path, dest_path)
         else:
-            copy_files_recursively(from_path, dest_path)
+            copy_files_recursive(from_path, dest_path)
 
 
 
